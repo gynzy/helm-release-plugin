@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-HELM_VERSION="3.17.0"
-KUBECTL_VERSION="1.32.1"
+HELM_VERSION="3.19.0"
+KUBECTL_VERSION="1.34.1"
 
 help_text="
 Sets release TTL. Under the hood creates Kubernetes CronJob that will delete specific release in concrete time.
@@ -24,7 +24,6 @@ Usage:
 
 	helm release ttl <RELEASE NAME> [ -o --output [ text | yaml | json ] ] - returns Kubernetes CronJob description.
 		Examples:
-		helm release ttl redis --namespace=release-namespace
 		helm release ttl redis --namespace=release-namespace
 
 		You can specify output format text(default) yaml or json. For example:
@@ -75,7 +74,7 @@ function create_ttl() {
                       args: [ 'uninstall', '$RELEASE' ]
                   containers:
                     - name: release-ttl-cleaner
-                      image: bitnami/kubectl:$KUBECTL_VERSION
+                      image: alpine/kubectl:$KUBECTL_VERSION
                       imagePullPolicy: IfNotPresent
                       args: [ 'delete', 'cronjob', '$cronjob_name' ]
                   restartPolicy: OnFailure
